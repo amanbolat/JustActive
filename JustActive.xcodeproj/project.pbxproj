@@ -10,6 +10,8 @@
 		DA7BA6C21D90283100D80F42 /* JustActive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA7BA6B81D90283100D80F42 /* JustActive.framework */; };
 		DA7BA6C71D90283100D80F42 /* JustActiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7BA6C61D90283100D80F42 /* JustActiveTests.swift */; };
 		DA7BA6C91D90283100D80F42 /* JustActive.h in Headers */ = {isa = PBXBuildFile; fileRef = DA7BA6BB1D90283100D80F42 /* JustActive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DA7BA6D51D90286400D80F42 /* SimpleIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7BA6D31D90286400D80F42 /* SimpleIndicator.swift */; };
+		DA7BA6D61D90286400D80F42 /* TopIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7BA6D41D90286400D80F42 /* TopIndicator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,11 +26,13 @@
 
 /* Begin PBXFileReference section */
 		DA7BA6B81D90283100D80F42 /* JustActive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JustActive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA7BA6BB1D90283100D80F42 /* JustActive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JustActive.h; sourceTree = "<group>"; };
-		DA7BA6BC1D90283100D80F42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DA7BA6BB1D90283100D80F42 /* JustActive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JustActive.h; path = JustActive/JustActive.h; sourceTree = "<group>"; };
+		DA7BA6BC1D90283100D80F42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = JustActive/Info.plist; sourceTree = "<group>"; };
 		DA7BA6C11D90283100D80F42 /* JustActiveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JustActiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA7BA6C61D90283100D80F42 /* JustActiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JustActiveTests.swift; sourceTree = "<group>"; };
 		DA7BA6C81D90283100D80F42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DA7BA6D31D90286400D80F42 /* SimpleIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleIndicator.swift; sourceTree = "<group>"; };
+		DA7BA6D41D90286400D80F42 /* TopIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopIndicator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +75,9 @@
 		DA7BA6BA1D90283100D80F42 /* JustActive */ = {
 			isa = PBXGroup;
 			children = (
-				DA7BA6BB1D90283100D80F42 /* JustActive.h */,
-				DA7BA6BC1D90283100D80F42 /* Info.plist */,
+				DA7BA6D31D90286400D80F42 /* SimpleIndicator.swift */,
+				DA7BA6D41D90286400D80F42 /* TopIndicator.swift */,
+				DA7BA6D21D90283B00D80F42 /* Other */,
 			);
 			path = JustActive;
 			sourceTree = "<group>";
@@ -84,6 +89,16 @@
 				DA7BA6C81D90283100D80F42 /* Info.plist */,
 			);
 			path = JustActiveTests;
+			sourceTree = "<group>";
+		};
+		DA7BA6D21D90283B00D80F42 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				DA7BA6BB1D90283100D80F42 /* JustActive.h */,
+				DA7BA6BC1D90283100D80F42 /* Info.plist */,
+			);
+			name = Other;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +163,8 @@
 				TargetAttributes = {
 					DA7BA6B71D90283100D80F42 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 3M97J98G22;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 					DA7BA6C01D90283100D80F42 = {
@@ -196,6 +213,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA7BA6D51D90286400D80F42 /* SimpleIndicator.swift in Sources */,
+				DA7BA6D61D90286400D80F42 /* TopIndicator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,8 +339,11 @@
 		DA7BA6CD1D90283100D80F42 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3M97J98G22;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -331,6 +353,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.amanbolat.JustActive;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -338,8 +361,10 @@
 		DA7BA6CE1D90283100D80F42 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3M97J98G22;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -356,6 +381,7 @@
 		DA7BA6D01D90283100D80F42 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = JustActiveTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amanbolat.JustActiveTests;
@@ -367,6 +393,7 @@
 		DA7BA6D11D90283100D80F42 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = JustActiveTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amanbolat.JustActiveTests;
