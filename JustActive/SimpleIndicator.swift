@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct SimpleIndicator {
+public struct SimpleIndicator {
   var messageView: UIView
   var indicator: UIActivityIndicatorView
   var label: UILabel

@@ -9,39 +9,39 @@
 import Foundation
 import UIKit
 
-class TopIndicatorFactory: NSObject {
-  var messager: TopIndicator?
+//open class TopIndicatorFactory: NSObject {
+//  var indicators: [TopIndicatorFactory] = []
+//
+//  override init() {
+//    super.init()
+//    NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
+//  }
+//
+//
+//
+//  deinit {
+//    NotificationCenter.default.removeObserver(self)
+//  }
+//
+//  func orientationDidChange() {
+//    indicator?.deviceOrientationDidChange()
+//  }
+//}
+
+open class TopIndicator: UIView {
   
-  override init() {
-    super.init()
-    NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
+  public enum PresentationType {
+    case show
+    case present
   }
   
-  convenience init(messager: TopIndicator) {
-    self.init()
-    self.messager = messager
-  }
-  
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-  
-  func orientationDidChange() {
-    messager?.deviceOrientationDidChange()
-  }
-}
-
-
-
-
-struct TopIndicator {
-  var mainView: UIView
-//  var delegate: UIView
+  static var showTimer = Timer()
+  var presentTimer = Timer()
   
   struct Configuration {
     static let height: CGFloat = 24
-    static let messageColor: UIColor = UIColor.white
-    static let messageBgColor: UIColor = UIColor.brown
+    static let textColor: UIColor = UIColor.white
+    static let backgroundColor: UIColor = UIColor.brown
   }
   
   lazy var label: UILabel = {
@@ -55,53 +55,118 @@ struct TopIndicator {
   
   weak var navigationController: UINavigationController?
   
-  init(navigationController: UINavigationController, message: String, messageColor: UIColor = Configuration.messageColor, messageBgColor: UIColor = Configuration.messageBgColor) {
+  public required init?(coder aDecoder: NSCoder) {
+    fatalError("aDecoder init not implemented")
+  }
+  
+  public init(navigationController: UINavigationController) {
+    super.init(frame: CGRect.zero)
+
+    NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
+    
     self.navigationController = navigationController
     
-    mainView = UIView()
-    mainView.backgroundColor = messageBgColor
-    mainView.clipsToBounds = true
-    mainView.frame = CGRect(
+    //    backgroundColor = UIColor.black
+    clipsToBounds = true
+    alpha = 0
+    frame = CGRect(
       x: 0,
       y: navigationController.navigationBar.frame.height,
       width: UIScreen.main.bounds.width,
       height: Configuration.height)
-
-    mainView.addSubview(label)
     
-    label.text = message
-    label.textColor = messageColor
-    label.sizeToFit()
- 
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-    label.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
+    addSubview(label)
+    
+    //    label.text = text
+    //    label.textColor = textColor
+    //    label.sizeToFit()
+    
+    NSLayoutConstraint.useAndActivateConstraints(constraints: [
+      label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ])
+  }
+}
 
+extension TopIndicator {
+  open func craft(text: String, textColor: UIColor, bgColor: UIColor, type: PresentationType) {
+    guard let nc = self.navigationController else { return }
+    TopIndicator.showTimer.invalidate()
+    
+    var navBarContainsView = false
+    
+    nc.navigationBar.subviews.forEach {
+      switch $0 {
+      case is TopIndicator:
+        navBarContainsView = true
+        $0.removeFromSuperview()
+        break
+      default:
+        return
+      }
+    }
+    
+    self.navigationController?.navigationBar.addSubview(self)
+    setup(text: text, textColor: textColor, bgColor: bgColor)
+    
+    switch type {
+    case .present:
+      present()
+    case .show:
+      show()
+    }
+  }
+  
+  func present() {
+    UIView.animate(withDuration: 0.3, animations: {
+      self.alpha = 1
+    })
   }
   
   func show() {
-    self.navigationController?.navigationBar.addSubview(mainView)
-    UIView.animate(withDuration: 0.5) {
-      self.mainView.isHidden = false
+    UIView.animate(withDuration: 0.3, animations: {
+      self.alpha = 1
+    }) { _ in
+      TopIndicator.showTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.showTimerFired(_:)), userInfo: nil, repeats: false)
     }
   }
   
-  func hide() {
-    UIView.animate(withDuration: 0.5, animations: { 
-      self.mainView.isHidden = true
-      }) { _ in
-        self.mainView.removeFromSuperview()
+  func setup(text: String, textColor: UIColor, bgColor: UIColor) {
+    self.label.text = text
+    self.label.textColor = textColor
+    self.label.textAlignment = .center
+    self.label.sizeToFit()
+    self.backgroundColor = bgColor
+  }
+  
+  func showTimerFired(_ timer: Timer) {
+    hide()
+  }
+  
+  open func hide(withAnimation duration: TimeInterval = 0.3) {
+    
+    TopIndicator.showTimer.invalidate()
+    print("Hide indicator")
+    UIView.animate(withDuration: duration, animations: {
+      self.alpha = 0
+    }) { _ in
+      self.removeFromSuperview()
     }
   }
   
-  func deviceOrientationDidChange() {
+  open func change(withText text: String, textColor: UIColor, bgColor: UIColor) {
+    setup(text: text, textColor: textColor, bgColor: bgColor)
+  }
+  
+  open func deviceOrientationDidChange() {
     guard let nc = navigationController else { return }
-    mainView.frame = CGRect(
+    frame = CGRect(
       x: 0,
       y: nc.navigationBar.frame.height,
       width: UIScreen.main.bounds.width,
       height: Configuration.height)
   }
 }
+
 
 
