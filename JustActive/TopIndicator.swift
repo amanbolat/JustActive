@@ -61,7 +61,7 @@ open class TopIndicator: UIView {
   
   public init(navigationController: UINavigationController) {
     super.init(frame: CGRect.zero)
-
+    
     NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
     
     self.navigationController = navigationController
