@@ -9,34 +9,30 @@
 import Foundation
 import UIKit
 
-public struct SimpleIndicator {
-  var messageView: UIView
-  var indicator: UIActivityIndicatorView
-  var label: UILabel
-  var stack: UIStackView
-  weak var vc: UIViewController?
+public class SimpleIndicator {
   
-  init(vc: UIViewController, message: String) {
-    self.vc = vc
+  static var messageView: UIView = {
     
-    messageView = UIView()
+    var messageView = UIView()
+    messageView.tag = 99
     messageView.translatesAutoresizingMaskIntoConstraints = false
 
     messageView.layer.backgroundColor = UIColor.darkGray.cgColor
     messageView.alpha = 0.9
     messageView.layer.cornerRadius = 10
     
-    indicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    var indicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     indicator.color = UIColor.white
+    indicator.tag = 33
     
-    label = UILabel()
+    var label = UILabel()
     label.font = UIFont(name: "HelveticaNeue", size: 15)
-    label.text = message
+    label.text = ""
     label.textAlignment = .center
     label.textColor = UIColor.white
     label.sizeToFit()
     
-    stack = UIStackView()//(frame: messageView.bounds)
+    var stack = UIStackView()//(frame: messageView.bounds)
     stack.axis = .vertical
     stack.alignment = .center
     stack.distribution = .fill
@@ -50,22 +46,45 @@ public struct SimpleIndicator {
     let alignYConstraint = NSLayoutConstraint(item: stack, attribute: .centerY, relatedBy: .equal, toItem: messageView, attribute: .centerY, multiplier: 1, constant: 0)
     
     NSLayoutConstraint.useAndActivateConstraints(constraints: [alignXConstraint, alignYConstraint])
-    
-//    stack.centerXAnchor.constraint(equalTo: messageView.centerXAnchor).isActive = true
-//    stack.centerYAnchor.constraint(equalTo: messageView.centerYAnchor).isActive = true
+  
+    return messageView
+  }()
+  
+  internal static func animateIndicator(with message: String? = nil,`true`: Bool) {
+    messageView.subviews.forEach({ aView in
+      aView.subviews.forEach({ bView in
+        if let  label = bView as? UILabel {
+          label.text = message
+        }
+        if let indicator = bView as? UIActivityIndicatorView {
+          if `true` {
+            indicator.startAnimating()
+          } else {
+            indicator.stopAnimating()
+          }
+        }
+      })
+    })
   }
   
-  func show() {
-    messageView.alpha = 0.5
-    if let vc = vc {
-      vc.view.addSubview(messageView)
+  public static func show(with message: String? = nil) {
+    if let window = UIApplication.shared.keyWindow {
+      let found = window.subviews.flatMap{$0.tag == 99}.contains(true)
+      guard !found else {
+        return
+      }
       
-      messageView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
-      messageView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
+      messageView.alpha = 0.5
+      window.addSubview(messageView)
+      
+      animateIndicator(with: message, true: true)
+      
+      messageView.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
+      messageView.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
       messageView.widthAnchor.constraint(equalToConstant: 125).isActive = true
       messageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
       
-      indicator.startAnimating()
+//      messageView.indicator.startAnimating()
       messageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
       UIView.animate(withDuration: 0.3, animations: {
         self.messageView.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -74,19 +93,20 @@ public struct SimpleIndicator {
     }
   }
   
-  func hide() {
+  public static func hide() {
     UIView.animate(withDuration: 0.3, animations: { 
-      self.messageView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-      self.messageView.alpha = 0
+      messageView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+      messageView.alpha = 0
       }) { (completed) in
-        self.messageView.transform = CGAffineTransform.identity
-        self.messageView.removeFromSuperview()
+        messageView.transform = CGAffineTransform.identity
+        animateIndicator(true: false)
+        messageView.removeFromSuperview()
     }
   }
 }
 
 extension NSLayoutConstraint {
-  
+
   public class func useAndActivateConstraints(constraints: [NSLayoutConstraint]) {
     for constraint in constraints {
       if let view = constraint.firstItem as? UIView {

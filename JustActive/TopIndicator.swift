@@ -9,25 +9,6 @@
 import Foundation
 import UIKit
 
-//open class TopIndicatorFactory: NSObject {
-//  var indicators: [TopIndicatorFactory] = []
-//
-//  override init() {
-//    super.init()
-//    NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
-//  }
-//
-//
-//
-//  deinit {
-//    NotificationCenter.default.removeObserver(self)
-//  }
-//
-//  func orientationDidChange() {
-//    indicator?.deviceOrientationDidChange()
-//  }
-//}
-
 open class TopIndicator: UIView {
   
   public enum PresentationType {
@@ -146,7 +127,6 @@ extension TopIndicator {
   open func hide(withAnimation duration: TimeInterval = 0.3) {
     
     TopIndicator.showTimer.invalidate()
-    print("Hide indicator")
     UIView.animate(withDuration: duration, animations: {
       self.alpha = 0
     }) { _ in
